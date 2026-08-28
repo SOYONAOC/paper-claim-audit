@@ -54,6 +54,20 @@
 
 脚本始终保留未标注的 `.raw.png`，并分别记录原图和标注图哈希。高亮只是展示层，不会冒充论文原始内容。
 
+## 输出示例
+
+下面是对 Strong et al. (2010) 表 1 脚注 b 的一张完整证据卡。图片由本仓库脚本直接从同版本 PDF 裁剪并标注，没有手工重写论文文字。
+
+![Strong et al. 2010 表 1 脚注 b 的淡紫色高亮证据](assets/example-strong2010-page4.png)
+
+- **结论**：该模型把径向源密度在 10–15 kpc 范围内固定为 10 kpc 处的值，并在 15 kpc 之外设为零。
+- **原文定位**：[Strong et al. (2010), arXiv:1008.4330v1](https://arxiv.org/pdf/1008.4330v1)，PDF 第 4 页，表 1 脚注 b。
+- **Supports**：论文明确规定了这段径向修正及其两个边界。
+- **Does not establish**：这张图不能单独证明某个当前项目或新版程序实际启用了该源分布；还需要配置和实现代码证据。
+- **可审计附件**：[未标注裁剪](assets/example-strong2010-page4.raw.png) · [JSON 证据清单](assets/example-strong2010-page4.json)
+
+示例只保留核查所需的一行原文。JSON 清单记录 PDF 哈希、页码、裁剪坐标、淡紫色标注参数以及原图和标注图的独立哈希。
+
 ## 安装
 
 需要 Python 3.9 或更新版本。无头 PDF 渲染需要 Poppler 提供的 `pdfinfo` 和 `pdftoppm`；添加高亮需要当前 Python 环境安装 Pillow。
@@ -114,6 +128,10 @@ python scripts/render_pdf_evidence.py PAPER.pdf \
 paper-claim-audit/
 ├── SKILL.md
 ├── agents/openai.yaml
+├── assets/
+│   ├── example-strong2010-page4.json
+│   ├── example-strong2010-page4.png
+│   └── example-strong2010-page4.raw.png
 ├── references/
 │   ├── report-template.md
 │   └── source-pdf-workflow.md

@@ -1,0 +1,41 @@
+{
+  "schema_version": 2,
+  "generated_at_utc": "2026-08-28T07:45:45.886066+00:00",
+  "paper": {
+    "identifier": "arXiv:1008.4330v1",
+    "pdf_url": "https://arxiv.org/pdf/1008.4330v1",
+    "retrieved_date": "2026-08-28",
+    "pdf_filename": "1008.4330v1.pdf",
+    "pdf_sha256": "c68ae023000004900d129ce2128b469a4f5f712cf8636b63cb0c112b7250735b",
+    "pdf_pages": 7
+  },
+  "render": {
+    "renderer": "pdftoppm version 20.11.0",
+    "page_one_based": 4,
+    "dpi": 220,
+    "crop_xywh_pixels": [
+      130,
+      986,
+      1705,
+      36
+    ],
+    "output_filename": "example-strong2010-page4.png",
+    "output_sha256": "7f9d80e2c523f881f57ba062d82d47adf01c6bb9585d5dfa11d444af9b35e066",
+    "raw_output_filename": "example-strong2010-page4.raw.png",
+    "raw_output_sha256": "ce2486a538488a68ff88e3d94ad936b21751c87336b9116e0e9a9f1dd7895941",
+    "annotation": {
+      "rectangles_xywh_pixels": [
+        [
+          10,
+          1,
+          1685,
+          34
+        ]
+      ],
+      "fill_hex": "#C4B5FD",
+      "fill_alpha": 0.28,
+      "border_hex": "#8B5CF6",
+      "border_width_pixels": 4
+    }
+  }
+}

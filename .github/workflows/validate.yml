@@ -18,9 +18,14 @@ jobs:
           test -f agents/openai.yaml
           test -f references/report-template.md
           test -f references/source-pdf-workflow.md
+          test -f assets/example-strong2010-page4.json
+          test -f assets/example-strong2010-page4.png
+          test -f assets/example-strong2010-page4.raw.png
           test -x scripts/render_pdf_evidence.py
           python -m py_compile scripts/render_pdf_evidence.py
           python - <<'PY'
+          import hashlib
+          import json
           from pathlib import Path
 
           text = Path("SKILL.md").read_text(encoding="utf-8")
@@ -28,5 +33,18 @@ jobs:
           frontmatter = text.split("\n---\n", 1)[0]
           assert "name: paper-claim-audit" in frontmatter
           assert "description:" in frontmatter
+
+          manifest = json.loads(
+              Path("assets/example-strong2010-page4.json").read_text(encoding="utf-8")
+          )
+          render = manifest["render"]
+          annotated = Path("assets") / render["output_filename"]
+          raw = Path("assets") / render["raw_output_filename"]
+          assert hashlib.sha256(annotated.read_bytes()).hexdigest() == render["output_sha256"]
+          assert hashlib.sha256(raw.read_bytes()).hexdigest() == render["raw_output_sha256"]
+          assert render["annotation"]["fill_hex"] == "#C4B5FD"
+          assert render["annotation"]["fill_alpha"] == 0.28
+          assert render["annotation"]["border_hex"] == "#8B5CF6"
+          assert render["annotation"]["border_width_pixels"] == 4
           print("Standalone skill validation passed")
           PY
