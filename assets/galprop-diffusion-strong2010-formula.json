@@ -1,0 +1,41 @@
+{
+  "schema_version": 2,
+  "generated_at_utc": "2026-08-28T08:30:51.330253+00:00",
+  "paper": {
+    "identifier": "arXiv:1008.4330v1",
+    "pdf_url": "https://arxiv.org/pdf/1008.4330v1",
+    "retrieved_date": "2026-08-28",
+    "pdf_filename": "1008.4330v1.pdf",
+    "pdf_sha256": "c68ae023000004900d129ce2128b469a4f5f712cf8636b63cb0c112b7250735b",
+    "pdf_pages": 7
+  },
+  "render": {
+    "renderer": "pdftoppm version 20.11.0",
+    "page_one_based": 4,
+    "dpi": 220,
+    "crop_xywh_pixels": [
+      110,
+      940,
+      1650,
+      58
+    ],
+    "output_filename": "galprop-diffusion-strong2010-formula.png",
+    "output_sha256": "a319e3200c17c350a4ab15ca3bc65adb1d3b31af572434f25f92378e8a2044b7",
+    "raw_output_filename": "galprop-diffusion-strong2010-formula.raw.png",
+    "raw_output_sha256": "e5bed54117cb6b9426dd329c638f16f15a07e14a86a213f69bc147ab5d918981",
+    "annotation": {
+      "rectangles_xywh_pixels": [
+        [
+          5,
+          3,
+          1600,
+          50
+        ]
+      ],
+      "fill_hex": "#C4B5FD",
+      "fill_alpha": 0.28,
+      "border_hex": "#8B5CF6",
+      "border_width_pixels": 4
+    }
+  }
+}

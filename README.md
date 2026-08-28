@@ -54,19 +54,57 @@
 
 脚本始终保留未标注的 `.raw.png`，并分别记录原图和标注图哈希。高亮只是展示层，不会冒充论文原始内容。
 
-## 输出示例
+## 真实输出示例：GALPROP 扩散系数
 
-下面是对 Strong et al. (2010) 表 1 脚注 b 的一张完整证据卡。图片由本仓库脚本直接从同版本 PDF 裁剪并标注，没有手工重写论文文字。
+下面是这个 skill 在实际 GALPROP 项目中完成过的一次核查。问题不是“某篇论文里有没有一个数”，而是：Strong et al. (2010) 的 `z10LMPDS` 如何定义扩散系数，Orlando & Strong (2013) 的 `SUN10E` 是否继承了这套设置，以及这些证据能支持多强的结论。
 
-![Strong et al. 2010 表 1 脚注 b 的淡紫色高亮证据](assets/example-strong2010-page4.png)
+### 核查结论
 
-- **结论**：该模型把径向源密度在 10–15 kpc 范围内固定为 10 kpc 处的值，并在 15 kpc 之外设为零。
-- **原文定位**：[Strong et al. (2010), arXiv:1008.4330v1](https://arxiv.org/pdf/1008.4330v1)，PDF 第 4 页，表 1 脚注 b。
-- **Supports**：论文明确规定了这段径向修正及其两个边界。
-- **Does not establish**：这张图不能单独证明某个当前项目或新版程序实际启用了该源分布；还需要配置和实现代码证据。
-- **可审计附件**：[未标注裁剪](assets/example-strong2010-page4.raw.png) · [JSON 证据清单](assets/example-strong2010-page4.json)
+文献证据共同支持以下模型定义：`z10LMPDS` 是 halo half-height 为 10 kpc 的 plain-diffusion 模型；扩散归一化参数为 `D0 = 6.0`，表中单位因子为 `10^28 cm^2 s^-1`，参考刚度为 4 GV，刚度指数为 `0.5`，公式保留 `beta = v/c` 因子；plain-diffusion 模型在参考刚度以下固定刚度幂律因子。Orlando & Strong (2013) 的 `SUN10E` 使用 10 kpc halo、S2010 源分布且不使用再加速。
 
-示例只保留核查所需的一行原文。JSON 清单记录 PDF 哈希、页码、裁剪坐标、淡紫色标注参数以及原图和标注图的独立哈希。
+**结论等级：高置信度的论文定义与采用关系。** 这不表示该组参数是银河系扩散的唯一物理真值，也不能仅凭论文截图证明任意当前 GALPROP 配置真的执行了它。
+
+### 证据 1：前序论文给出的参数列
+
+![Strong et al. 2010 表 1 中 z10LMPDS 参数列的淡紫色高亮证据](assets/galprop-diffusion-strong2010-parameters.png)
+
+- **原文定位**：[Strong et al. (2010), arXiv:1008.4330v1](https://arxiv.org/pdf/1008.4330v1)，PDF 第 4 页，Table 1，`Plain Diffusion / Model 3 / z10LMPDS` 列。
+- **源码复核**：同版本 arXiv 源码 `ms.tex` 的 Table 1 数据块给出 halo height、`D0`、`delta` 和 reacceleration 各行。
+- **Supports**：模型身份、10 kpc halo、`D0 = 6.0`、`delta = 0.5`，以及 plain-diffusion 列没有再加速参数。
+- **Does not establish**：这一张表本身没有完整定义 `D0` 的单位、参考刚度和低刚度行为。
+- **可审计附件**：[未标注裁剪](assets/galprop-diffusion-strong2010-parameters.raw.png) · [JSON 证据清单](assets/galprop-diffusion-strong2010-parameters.json)
+
+### 证据 2：同一张表的扩散公式脚注
+
+![Strong et al. 2010 表 1 扩散公式脚注的淡紫色高亮证据](assets/galprop-diffusion-strong2010-formula.png)
+
+- **原文定位**：[Strong et al. (2010), arXiv:1008.4330v1](https://arxiv.org/pdf/1008.4330v1)，PDF 第 4 页，Table 1 脚注 a。
+- **源码复核**：同版本 arXiv 源码 `ms.tex` 的 `tablenotetext{a}` 与 PDF 排版一致。
+- **Supports**：扩散系数中的 `10^28` 单位因子、速度因子、4 GV 参考刚度，以及 plain-diffusion 模型的低刚度规则。
+- **Does not establish**：脚注只定义表中参数的含义；具体采用哪一列仍要回到 Table 1。
+- **可审计附件**：[未标注裁剪](assets/galprop-diffusion-strong2010-formula.raw.png) · [JSON 证据清单](assets/galprop-diffusion-strong2010-formula.json)
+
+### 证据 3：后续论文中的采用关系
+
+![Orlando and Strong 2013 表 2 中 SUN10E 传播设置的淡紫色高亮证据](assets/galprop-diffusion-orlando2013-sun10e.png)
+
+- **原文定位**：[Orlando & Strong (2013), arXiv:1309.2947v2](https://arxiv.org/pdf/1309.2947v2)，PDF 第 11 页，Table 2，`SUN10E` 列。
+- **源码复核**：同版本 `ms.tex` 的 “Testing existing B-field models” 一节说明注入谱和 CR 源分布沿用 Strong et al. (2010) 的 LMPDS plain-diffusion 模型；Table 2 数据块给出 `SUN10E` 的传播设置。
+- **Supports**：`SUN10E` 的 10 kpc halo、S2010 源分布和零再加速设置，并把它连接到 Strong2010/LMPDS 模型链。
+- **Does not establish**：Table 2 没有重列 `D0` 和 `delta`；这两个数值必须由采用说明与 Strong2010 的参数表共同建立。
+- **可审计附件**：[未标注裁剪](assets/galprop-diffusion-orlando2013-sun10e.raw.png) · [JSON 证据清单](assets/galprop-diffusion-orlando2013-sun10e.json)
+
+### 为什么这个结论较稳健
+
+```text
+Orlando2013 SUN10E 的模型与传播设置
+  -> Orlando2013 源码中的 Strong2010/LMPDS 采用说明
+  -> Strong2010 z10LMPDS 参数列
+  -> Strong2010 公式脚注中的单位和低刚度定义
+  -> 当前项目配置与 GALPROP 实现语义（应用到具体项目时必须另查）
+```
+
+这里没有用单张截图包办全部结论。数值、公式语义和论文继承关系分别由不同证据支持；每张标注图都保留未标注原图和 JSON 清单，记录 PDF 哈希、页码、裁剪坐标、渲染器、高亮参数及两张图片的独立哈希。
 
 ## 安装
 
@@ -129,9 +167,9 @@ paper-claim-audit/
 ├── SKILL.md
 ├── agents/openai.yaml
 ├── assets/
-│   ├── example-strong2010-page4.json
-│   ├── example-strong2010-page4.png
-│   └── example-strong2010-page4.raw.png
+│   ├── galprop-diffusion-strong2010-parameters.{png,raw.png,json}
+│   ├── galprop-diffusion-strong2010-formula.{png,raw.png,json}
+│   └── galprop-diffusion-orlando2013-sun10e.{png,raw.png,json}
 ├── references/
 │   ├── report-template.md
 │   └── source-pdf-workflow.md
