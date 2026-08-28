@@ -1,0 +1,32 @@
+name: validate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate-skill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate repository structure and Python syntax
+        run: |
+          test -f SKILL.md
+          test -f agents/openai.yaml
+          test -f references/report-template.md
+          test -f references/source-pdf-workflow.md
+          test -x scripts/render_pdf_evidence.py
+          python -m py_compile scripts/render_pdf_evidence.py
+          python - <<'PY'
+          from pathlib import Path
+
+          text = Path("SKILL.md").read_text(encoding="utf-8")
+          assert text.startswith("---\n")
+          frontmatter = text.split("\n---\n", 1)[0]
+          assert "name: paper-claim-audit" in frontmatter
+          assert "description:" in frontmatter
+          print("Standalone skill validation passed")
+          PY
